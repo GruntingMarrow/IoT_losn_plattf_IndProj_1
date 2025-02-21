@@ -14,6 +14,28 @@ GPIO.setup(tilt_pin, GPIO.IN)
 GPIO.setup(green_led_pin, GPIO.OUT)
 GPIO.setup(red_led_pin, GPIO.OUT)
 
+# Filens sökväg
+#file_path = os.path.expanduser("~/sensor_tmp.log")
+# Filens sökväg
+file_path = os.path.expanduser("~/sensor_tmp.log")
+
+# **Skapa filen om den inte finns (touch-funktion)**
+if not os.path.exists(file_path):
+    open(file_path, "a").close()
+
+def log_sensor_data(state):
+    """Loggar sensordata i en temporär fil."""
+    with open(file_path, "a") as file:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
+        file.write(f"{timestamp}, {'Tiltad' if state == GPIO.LOW else 'Ej tiltad'}\n")
+
+        # Håll filen under 100 rader
+        file.seek(0)
+        lines = file.readlines()
+        if len(lines) > 100:
+            with open(file_path, "w") as f:
+                f.writelines(lines[-100:])
+
 # Håll koll på det senaste tillståndet
 last_state = None
 
