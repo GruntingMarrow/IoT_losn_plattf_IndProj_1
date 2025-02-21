@@ -1,6 +1,8 @@
 import time
 import math
 import RPi.GPIO as GPIO
+import os
+
 
 class Measurement(object):
     '''Create a measurement using a HC-SR04 Ultrasonic Sensor connected to 
@@ -70,6 +72,25 @@ class Measurement(object):
     def distance_metric(self, median_reading):
         '''Calculate the rounded metric distance, in cm's, from the sensor to an object'''
         return round(median_reading, self.round_to)
+    
+    # --- Filhantering och loggning: 
+file_path = os.path.expanduser("~/distance_sensor_log.txt")  # Filens sökväg
+if not os.path.exists(file_path):  # Om filen inte finns, skapa den
+    open(file_path, "a").close()
+
+# Funktion för att logga data i filen
+def log_distance_data(distance):
+    '''Loggar mätdata till filen.'''
+    with open(file_path, "a") as file:
+        timestamp = time.strftime("%Y-%m-%d %H:%M:%S")  # Tidsstämpel
+        file.write(f"{timestamp}, Avstånd: {distance} cm\n")  # Skriv till fil
+
+        # Håll filen under 5000 rader
+        file.seek(0)
+        lines = file.readlines()
+        if len(lines) > 5000:
+            with open(file_path, "w") as f:
+                f.writelines(lines[-5000:])
 
 sensor = Measurement(trig_pin=13, echo_pin=19)
 
