@@ -29,12 +29,12 @@ def log_sensor_data(state):
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         file.write(f"{timestamp}, {'Tiltad' if state == GPIO.LOW else 'Ej tiltad'}\n")
 
-        # Håll filen under 100 rader
+        # Håll filen under 1000 rader
         file.seek(0)
         lines = file.readlines()
-        if len(lines) > 100:
+        if len(lines) > 1000:
             with open(file_path, "w") as f:
-                f.writelines(lines[-100:])
+                f.writelines(lines[-1000:])
 
 # Håll koll på det senaste tillståndet
 last_state = None
