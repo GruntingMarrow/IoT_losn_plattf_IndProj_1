@@ -14,10 +14,9 @@ GPIO.setup(tilt_pin, GPIO.IN)
 GPIO.setup(green_led_pin, GPIO.OUT)
 GPIO.setup(red_led_pin, GPIO.OUT)
 
+
 # Filens sökväg
-#file_path = os.path.expanduser("~/sensor_tmp.log")
-# Filens sökväg
-file_path = os.path.expanduser("~/sensor_tmp.log")
+file_path = os.path.expanduser("~/tilt-sensor_tmp.log")
 
 # **Skapa filen om den inte finns (touch-funktion)**
 if not os.path.exists(file_path):
