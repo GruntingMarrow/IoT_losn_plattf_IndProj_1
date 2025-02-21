@@ -74,7 +74,7 @@ class Measurement(object):
         return round(median_reading, self.round_to)
     
     # --- Filhantering och loggning: 
-file_path = os.path.expanduser("~/distance_sensor_log.txt")  # Filens sökväg
+file_path = os.path.expanduser("~/distance_sensor_tmp.log")  # Filens sökväg
 if not os.path.exists(file_path):  # Om filen inte finns, skapa den
     open(file_path, "a").close()
 
