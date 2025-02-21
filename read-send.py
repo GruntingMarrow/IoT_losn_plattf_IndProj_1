@@ -52,5 +52,5 @@ while True:
         print(f"Skickar data: Tilt: {tilt_data}, Avstånd: {distance_data}")
         send_to_thingspeak(tilt_data, distance_data)
 
-    # Vänta 60 sekunder innan nästa läsning
+    # Vänta innan nästa läsning
     time.sleep(1)
