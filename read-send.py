@@ -3,7 +3,7 @@ import time
 
 # ThingSpeak API-url och din skriv-API-nyckel
 THINGSPEAK_URL = "https://api.thingspeak.com/update"
-API_KEY = "api"
+API_KEY = "FA69IQLNJ8AMFNPV"
 
 # Filvägar för de temporära loggfilerna
 tilt_file_path = "~/tilt-sensor_tmp.log"
