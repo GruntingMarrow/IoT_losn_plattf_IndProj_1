@@ -1,58 +1,57 @@
 import requests
 import time
-import os
 
-# ThingSpeak API-url och din skriv-API-nyckel
+# ThingSpeak API-uppgifter
 THINGSPEAK_URL = "https://api.thingspeak.com/update"
-API_KEY = "FA69IQLNJ8AMFNPV"
+API_KEY_TILT = "SRX5SYFZ66J2LV6T"  # Ersätt med din API-nyckel för tilt
+API_KEY_DISTANCE = "2WICZMHK625MBB4D"  # Ersätt med din API-nyckel för avstånd
 
-# Filvägar för de temporära loggfilerna
-tilt_file_path = "/home/ulf/tilt-sensor_tmp.log"
-distance_file_path = "/home/ulfdistance_sensor_tmp.log"
+# Filvägar
+tilt_log = "/home/ulf/tilt-sensor_tmp.log"
+distance_log = "/home/ulf/distance_sensor_tmp.log"
 
-# Läs data från filen
-def read_data_from_file(file_path):
+def clear_log(file_path):
+    """Rensar innehållet i en loggfil."""
+    with open(file_path, "w"):
+        pass  # Töm filen genom att öppna den för skrivning utan att skriva något
+
+def read_last_line(file_path):
     """Läser den senaste raden från en fil."""
-    file_path = os.path.expanduser(file_path)
     try:
         with open(file_path, "r") as file:
             lines = file.readlines()
-            if lines:
-                return lines[-1].strip()  # Hämtar sista raden
-            else:
-                return None
+            return lines[-1].strip() if lines else None
     except FileNotFoundError:
-        print(f"Filen {file_path} hittades inte.")
         return None
 
-
-# Skicka data till ThingSpeak
-def send_to_thingspeak(field1, field2):
+def send_to_thingspeak(api_key, field, value):
     """Skickar data till ThingSpeak."""
-    payload = {
-        'api_key': API_KEY,
-        'field1': field1,
-        'field2': field2
-    }
+    payload = {'api_key': api_key, field: value}
     try:
         response = requests.post(THINGSPEAK_URL, data=payload)
         if response.status_code == 200:
-            print("Data skickad till ThingSpeak.")
+            print(f"Data skickad till ThingSpeak: {field} = {value}")
         else:
-            print(f"Fel vid att skicka data: {response.status_code}")
+            print(f"Fel vid sändning: {response.status_code}")
     except requests.exceptions.RequestException as e:
-        print(f"Fel vid HTTP-förfrågan: {e}")
+        print(f"HTTP-fel: {e}")
 
-# Huvudloop för att läsa och skicka data
+# Rensa loggfiler innan starten av huvudloopen
+clear_log(tilt_log)
+clear_log(distance_log)
+
+# Huvudloop för att skicka data var 3:e sekund
 while True:
-    # Läs senaste data från varje fil
-    tilt_data = read_data_from_file(tilt_file_path)
-    distance_data = read_data_from_file(distance_file_path)
+    tilt_data = read_last_line(tilt_log)
+    distance_data = read_last_line(distance_log)
 
-    # Om både data finns, skicka till ThingSpeak
-    if tilt_data and distance_data:
-        print(f"Skickar data: Tilt: {tilt_data}, Avstånd: {distance_data}")
-        send_to_thingspeak(tilt_data, distance_data)
+    # Skriv ut senaste data från loggarna till terminalen
+    if tilt_data:
+        print(f"Senaste tilt data: {tilt_data}")
+        send_to_thingspeak(API_KEY_TILT, 'field1', tilt_data)
+    if distance_data:
+        print(f"Senaste distance data: {distance_data}")
+        send_to_thingspeak(API_KEY_DISTANCE, 'field1', distance_data)
 
-    # Vänta innan nästa läsning
-    time.sleep(1)
+    time.sleep(3)
+
