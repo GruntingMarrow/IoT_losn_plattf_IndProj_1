@@ -74,7 +74,7 @@ class Measurement(object):
         return round(median_reading, self.round_to)
     
     # --- Filhantering och loggning: 
-file_path = os.path.expanduser("~/distance_sensor_tmp.log")  # Filens sökväg
+file_path = os.path.expanduser("/home/ulf/distance_sensor_tmp.log")  # Filens sökväg
 if not os.path.exists(file_path):  # Om filen inte finns, skapa den
     open(file_path, "a").close()
 
@@ -96,7 +96,7 @@ sensor = Measurement(trig_pin=13, echo_pin=19)
 
 # Första värdet som ska jämföras
 previous_distance = None
-tolerance = 0.2  # Toleransnivå för skillnad i avstånd
+tolerance = 0.5  # Toleransnivå för skillnad i avstånd
 
 while True:
     # Hämta avstånd
@@ -109,8 +109,8 @@ while True:
 
         # Om skillnaden mellan nuvarande och föregående avstånd är större än toleransen, skriv ut
         if previous_distance is None or abs(previous_distance - distance_rounded) > tolerance:
-            print(f"Temperatur: {sensor.temperature} °C")
-            print(f"Avstånd: {distance_rounded} cm")
+          #  print(f"Temperatur: {sensor.temperature} °C")
+#            print(f"Avstånd: {distance_rounded} cm")
             previous_distance = distance_rounded
 
     # Vänta --innan nästa mätning

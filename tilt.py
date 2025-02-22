@@ -17,7 +17,7 @@ GPIO.setup(red_led_pin, GPIO.OUT)
 
 
 # Filens sökväg
-file_path = os.path.expanduser("~/tilt-sensor_tmp.log")
+file_path = os.path.expanduser("/home/ulf/tilt-sensor_tmp.log")
 
 # **Skapa filen om den inte finns (touch-funktion)**
 if not os.path.exists(file_path):
@@ -29,12 +29,12 @@ def log_sensor_data(state):
         timestamp = time.strftime("%Y-%m-%d %H:%M:%S")
         file.write(f"{timestamp}, {'Tiltad' if state == GPIO.LOW else 'Ej tiltad'}\n")
 
-        # Håll filen under 1000 rader
+        # Håll filen under 100 rader
         file.seek(0)
         lines = file.readlines()
-        if len(lines) > 1000:
+        if len(lines) > 100:
             with open(file_path, "w") as f:
-                f.writelines(lines[-1000:])
+                f.writelines(lines[-100:])
 
 # Håll koll på det senaste tillståndet
 last_state = None
@@ -48,14 +48,9 @@ try:
         if current_state != last_state:
             if current_state == GPIO.HIGH:
                 # Sensor är inte tiltad
-                print("Sensor är inte tiltad")
+#               print("Sensor är inte tiltad")
                 GPIO.output(green_led_pin, GPIO.HIGH)  # Tänd grön LED
                 GPIO.output(red_led_pin, GPIO.LOW)    # Släck röd LED
-            else:
-                # Sensor är tiltad
-                print("Sensor är tiltad")
-                GPIO.output(green_led_pin, GPIO.LOW)  # Släck grön LED
-                GPIO.output(red_led_pin, GPIO.HIGH)   # Tänd röd LED
 
             # Uppdatera senaste tillståndet
             last_state = current_state
@@ -65,3 +60,5 @@ try:
 except KeyboardInterrupt:
     print("Programmet avslutades av användaren")
     GPIO.cleanup()
+
+
