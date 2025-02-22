@@ -1,13 +1,14 @@
 import requests
 import time
+import os
 
 # ThingSpeak API-url och din skriv-API-nyckel
 THINGSPEAK_URL = "https://api.thingspeak.com/update"
 API_KEY = "FA69IQLNJ8AMFNPV"
 
 # Filvägar för de temporära loggfilerna
-tilt_file_path = "~/tilt-sensor_tmp.log"
-distance_file_path = "~/distance_sensor_tmp.log"
+tilt_file_path = "/home/ulf/tilt-sensor_tmp.log"
+distance_file_path = "/home/ulfdistance_sensor_tmp.log"
 
 # Läs data från filen
 def read_data_from_file(file_path):
@@ -23,6 +24,7 @@ def read_data_from_file(file_path):
     except FileNotFoundError:
         print(f"Filen {file_path} hittades inte.")
         return None
+
 
 # Skicka data till ThingSpeak
 def send_to_thingspeak(field1, field2):
